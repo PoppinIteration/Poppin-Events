@@ -1,6 +1,7 @@
 import '../stylesheets/App.css';
 import React, { useState, useEffect, useContext} from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
+/* https://www.npmjs.com/package/@react-google-maps/api */
 
 import axios from 'axios';
 import MarkerCreator from './MarkerCreator';
@@ -37,9 +38,11 @@ function Map() {
       const getEvents = async () => {
         const response = await axios.get('/api/events');
         const { data } = response;
+        console.log(data);
         setMarkerData(data);
       };
       getEvents();
+      // getTicketmasterevents();
       // get current user location and set the center of the map to that location
       if (navigator.geolocation) { // native browser geolocation functionality
         navigator.geolocation.getCurrentPosition(
@@ -75,12 +78,12 @@ function Map() {
   };
 
   // handle click on update button
-  const handleUpdate = () => {
+  const editUsersEvent = () => {
     setUpdating(true);
   };
 
   // handle click on delete button
-  const handleDelete = async (eID, uID) => {
+  const deleteUsersEvent = async (eID, uID) => {
     // create the object for the db query on backend
     const deleteReq = {
       eventID: eID,
@@ -153,8 +156,8 @@ function Map() {
               {
                 eventData.email === user.email && (
                   <div className="event-buttons-container">
-                    <button className="edit-button " type="button" onClick={handleUpdate}> Edit </button>
-                    <button className="delete-button" type="button" onClick={() => handleDelete(eventData.id, user.id)}> Delete </button>
+                    <button className="edit-button " type="button" onClick={editUsersEvent}> Edit </button>
+                    <button className="delete-button" type="button" onClick={() => deleteUsersEvent(eventData.id, user.id)}> Delete </button>
                   </div>
                 )
               }

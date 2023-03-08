@@ -76,7 +76,7 @@ export default function MarkerCreator(props) {
     }
   }
 
-  // <Autocomplete /> component imported from @react-google-maps/api to have autocomplete address
+  // <Autocomplete /> component imported from @react-google-autocomplete to have autocomplete address
   return (
     <div className="create-event-container box-shadow-1">
       <h4>Create an Event</h4>

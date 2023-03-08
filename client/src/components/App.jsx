@@ -1,15 +1,16 @@
-//  stylings
-import '../stylesheets/App.css';
 //  fetch requester
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 //  import routes and usenavigate
 import { Routes, Route, useNavigate } from 'react-router-dom';
+
+//import map and login components
 import Map from './Map';
-// import jwt_decode from 'jwt-decode';
 import Login from './Login';
 import { UserContext } from './UserContext';
 
+//  stylings
+import '../stylesheets/App.css';
 
 function App(props) {
   const navigate = useNavigate();
