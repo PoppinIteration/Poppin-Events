@@ -53,9 +53,15 @@ router.delete(
 router.get(
   '/ticketmaster/:lat/:lng',
   geocodeController.reverseGeocode,
-  // (req, res) => res.status(200).json(res.locals),
   tmEventController.getEvents,
   (req, res) => res.status(200).json(res.locals.events),
+);
+
+// Save a Ticketmaster event in the database
+router.post(
+  '/ticketmaster/:lat/:lng',
+  eventController.createEvent,
+  (req, res) => res.status(200).json(res.locals.id),
 );
 
 // Checks for active sessions
