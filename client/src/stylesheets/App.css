@@ -48,6 +48,7 @@ button {
   padding: 20px;
   min-width: 300px;
   margin-top: 20px;
+  /* color:white; */
 }
 .event-title {
   margin-top: -4px;
@@ -70,7 +71,7 @@ button {
 
 .box-shadow-1:hover {
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-}
+} 
 
 .create-event-container {
   text-align: center;

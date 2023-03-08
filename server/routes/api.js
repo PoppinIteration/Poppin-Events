@@ -3,7 +3,7 @@ const userController = require('../controllers/userController');
 const eventController = require('../controllers/eventController');
 const sessionController = require('../controllers/sessionController');
 const tmEventController = require('../controllers/tmEventController');
-const geocodeController = require('../controllers/geocodeController');
+const geocodeController = require('../controllers/geoCodeController');
 
 const router = express.Router();
 

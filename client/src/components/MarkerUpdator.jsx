@@ -34,7 +34,7 @@ export default function MarkerUpdator(props) {
   }
 
   // submit handler
-  const handleSubmit = async (e) => {
+  const eventUpdate = async (e) => {
     e.preventDefault();
     try {
       console.log('in MARKER CREATOR user is: ', user.id);
@@ -98,7 +98,7 @@ export default function MarkerUpdator(props) {
   return (
     <div className="create-event-container box-shadow-1">
       <h4>Edit your Event</h4>
-      <form id="add-event" className="create-form" onSubmit={handleSubmit}>
+      <form id="add-event" className="create-form" onSubmit={eventUpdate}>
         <label className="screen-reader-text" htmlFor="event-name">
           Name your event:
         </label>

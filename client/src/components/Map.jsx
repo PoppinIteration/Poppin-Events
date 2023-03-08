@@ -38,10 +38,18 @@ function Map() {
       const getEvents = async () => {
         const response = await axios.get('/api/events');
         const { data } = response;
-        console.log(data);
+        // console.log(data);
         setMarkerData(data);
       };
+
+      const getTicketMasterEvents = async () => {
+        const response = await axios.get('/api/ticketmaster/40.714224/-73.961452');
+        const { data } = response;
+        console.log('getTicketMasterEvents: ', data);
+        // setMarkerData(data);
+      }
       getEvents();
+      getTicketMasterEvents();
       // getTicketmasterevents();
       // get current user location and set the center of the map to that location
       if (navigator.geolocation) { // native browser geolocation functionality
