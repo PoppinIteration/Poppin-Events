@@ -23,15 +23,56 @@ eventController.getEvents = async (req, res, next) => {
 // create a new event in the database
 eventController.createEvent = async (req, res, next) => {
   try {
-    console.log('in event creator with req: ', req.body);
-    const { name, description, date, locName, address, userID } = req.body;
-    const { lat, lng } = req.body.location[0];
-    // insert the event into the database using a subquery for the organizer id
-    const addEventQuery = 'INSERT INTO events (name, description, date, loc_name, address, lat, lng, organizer_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id';
-    const newEventVals = [name, description, date, locName, address, lat, lng, userID];
-    const newEvent = await db.query(addEventQuery, newEventVals);
-    // **note - that rows[0] will actually be an OBJECT containing {id: <some number>} ** !
-    res.locals.id = newEvent.rows[0];
+    if (!res.locals.dbEvent) {
+      console.log('in event creator with req: ', req.body);
+      // const { name, description, date, locName, address, userID } = req.body;
+      const {
+        name,
+        address,
+        date,
+        description,
+        id,
+        location,
+        locName,
+        end_date,
+        image_url,
+        ticketmaster_evt_id,
+        rsvp_url,
+        evt_origin_type_id,
+        organizer,
+      } = req.body;
+
+      const { lat, lng } = req.body.location[0];
+      const organizer_id = req.body.organizer[0].id;
+
+      // insert the event into the database using a subquery for the organizer id
+      // const addEventQuery = 'INSERT INTO events (name, description, date, loc_name, address, lat, lng, organizer_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id';
+
+      // updated: insert the event into the database using subquery for the organizer id
+      const addEventQuery = 'INSERT INTO events (name, address, date, description, id, location, loc_name, end_date, image_url, ticketmaster_evt_id, rsvp_url, evt_origin_type_id, organizer_id, lat, lng) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id';
+
+      // const newEventVals = [name, description, date, locName, address, lat, lng, userID];
+
+      const newEventVals = [
+        name,
+        address,
+        date,
+        description,
+        lat,
+        lng,
+        locName,
+        end_date,
+        image_url,
+        ticketmaster_evt_id,
+        rsvp_url,
+        evt_origin_type_id,
+        organizer_id,
+      ];
+      const newEvent = await db.query(addEventQuery, newEventVals);
+
+      // **note - that rows[0] will actually be an OBJECT containing {id: <some number>} ** !
+      res.locals.id = newEvent.rows[0];
+    }
     return next();
   } catch (error) {
     return next({
