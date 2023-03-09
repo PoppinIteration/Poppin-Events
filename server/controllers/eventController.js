@@ -101,6 +101,15 @@ eventController.createEvent = async (req, res, next) => {
       const { lat, lng } = req.body.location;
       const organizer_id = req.body.organizer.id;
 
+      // Make sure organizer_id and evt_origin_type_id are populated in the request body
+      // If not, throw an error
+      if (organizer_id === undefined
+        || organizer_id === null
+        || evt_origin_type_id === undefined
+        || evt_origin_type_id === null) {
+        throw new Error('Missing required fields');
+      }
+
       // updated: insert the event into the database using subquery for the organizer id
       const addEventQuery = `INSERT INTO events 
         (
