@@ -37,7 +37,7 @@ export default function MarkerCreator(props) {
       //   description,
       //   userID: id,
       // };
-
+      
 
       // Modified event object: testing
       const event = {
