@@ -1,6 +1,12 @@
 /* eslint-disable camelcase */
 // import the event model
-const db = require('../models/dbModel');
+const EventModel = require('../models/eventModel.js');
+const db = require('../models/dbModel.js');
+
+const EVENT_ORIGIN_TYPE = {
+  'USER': 1,
+  'TICKETMASTER': 2
+};
 
 const eventController = {};
 
@@ -9,35 +15,65 @@ eventController.getEvents = async (req, res, next) => {
   try {
     /* select event information,
     using jsonb_agg to create a json object out of lat and lng by declaring key/value pairs */
-    const query = await db.query(
-      `SELECT e.id, 
-        e.name, 
-        e.description, 
-        e.date, 
-        e.loc_name AS locName, 
-        e.address, 
-        jsonb_agg(json_build_object(\'lat\', e.lat, \'lng\', e.lng)) AS location, 
-        e.end_date,
-        e.image_url,
-        e.ticketmaster_evt_id,
-        e.evt_origin_type_id,
-        u.name AS organizer, 
-        u.email, 
-        u.picture 
-        FROM events e 
-          LEFT OUTER JOIN users u 
-            ON e.organizer_id = u.id 
-        WHERE e.evt_origin_type_id = 1
-        GROUP BY e.id, u.name, u.email, u.picture`
-    );
-    res.locals.events = query.rows;
+    const queryStr = `
+    SELECT e.id, 
+    e.name, 
+    e.description, 
+    e.date, 
+    e.loc_name AS locName, 
+    e.address, 
+    e.lat, 
+    e.lng, 
+    e.end_date,
+    e.image_url,
+    e.ticketmaster_evt_id,
+    e.evt_origin_type_id,
+    e.rsvp_url,
+    u.id AS organizer_id,
+    u.name AS organizer_name, 
+    u.email AS organizer_email,
+    u.picture AS organizer_picture
+    FROM events e 
+      LEFT OUTER JOIN users u 
+        ON e.organizer_id = u.id 
+    WHERE e.evt_origin_type_id = ${EVENT_ORIGIN_TYPE.USER}
+    GROUP BY e.id, u.name, u.email, u.picture, u.id`;
+
+    const queryResult = await db.query(queryStr);
+
+    // Iterate through the rows, creating an EventModel for each row
+    // Push all EventModels into the events array
+    const eventsArr = [];
+    queryResult.rows.forEach(row => {
+      eventsArr.push(new EventModel(
+        row.name,
+        row.address,
+        row.date,
+        row.description,
+        row.id,
+        row.lat,
+        row.lng,
+        row.locName,
+        row.end_date,
+        row.image_url,
+        row.ticketmaster_evt_id,
+        row.rsvp_url,
+        row.evt_origin_type_id,
+        row.organizer_id,
+        row.organizer_name,
+        row.organizer_email,
+        row.organizer_picture,
+      ));
+    });
+
+    res.locals.events = eventsArr;
     // query shape: {something: x, rows:[{data}, {data2}], blah: y, ....}
     return next();
   } catch (error) {
-    return next({
-      log: 'eventController.getEvents error',
-      message: { err: 'Error getting events from database' },
-    });
+      return next({
+        log: 'eventController.getEvents error',
+        message: { err: error.message },
+      });
   }
 };
 
