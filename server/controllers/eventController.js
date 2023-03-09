@@ -82,7 +82,7 @@ eventController.createEvent = async (req, res, next) => {
   try {
     if (!res.locals.dbEvent) {
       console.log('in event creator with req: ', req.body);
-      // const { name, description, date, locName, address, userID } = req.body;
+
       const {
         name,
         address,
@@ -98,29 +98,8 @@ eventController.createEvent = async (req, res, next) => {
         organizer,
       } = req.body;
 
-      // console.log(`req.body's destructured name: `, name);
-      // console.log(`req.body's destructured address: `, address);
-      // console.log(`req.body's destructured date: `, date);
-      // console.log(`req.body's destructured description: `, description);
-      // console.log(`req.body's destructured location: `, location);
-      // console.log(`req.body's destructured locName: `, locName);
-      // console.log(`req.body's destructured end_date: `, end_date);
-      // console.log(`req.body's destructured image_url: `, image_url);
-      // console.log(`req.body's destructured ticketmaster_evt_id: `, ticketmaster_evt_id);
-      // console.log(`req.body's destructured rsvp_url: `, rsvp_url);
-      // console.log(`req.body's destructured evt_origin_type_id: `, evt_origin_type_id);
-      // console.log(`req.body's destructured organizer: `, organizer);
-
-      // console.log('this works tho?');
-      // const { lat, lng } = req.body.location[0];
       const { lat, lng } = req.body.location;
       const organizer_id = req.body.organizer.id;
-      // console.log('lat: ', lat);
-      // console.log('lng: ', lng);
-      // console.log('separate orgr console: ', organizer_id);
-
-      // insert the event into the database using a subquery for the organizer id
-      // const addEventQuery = 'INSERT INTO events (name, description, date, loc_name, address, lat, lng, organizer_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id';
 
       // updated: insert the event into the database using subquery for the organizer id
       const addEventQuery = `INSERT INTO events 
@@ -129,18 +108,19 @@ eventController.createEvent = async (req, res, next) => {
           address, 
           date, 
           description, 
-          location, 
+          lat, 
+          lng,
           loc_name, 
           end_date, 
           image_url, 
           ticketmaster_evt_id, 
           rsvp_url, 
           evt_origin_type_id, 
-          organizer_id, lat, lng
+          organizer_id
         ) 
         VALUES 
         (
-          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
         ) 
         RETURNING id`;
 
@@ -164,17 +144,13 @@ eventController.createEvent = async (req, res, next) => {
       const newEvent = await db.query(addEventQuery, newEventVals);
 
       // **note - that rows[0] will actually be an OBJECT containing {id: <some number>} ** !
-      console.log('newEvent.rows[0]: ', newEvent.rows[0]);
-      console.log('newEvent.rows: ', newEvent.rows);
-
-      console.log('res.locals.id: ', res.locals.id);
       res.locals.id = newEvent.rows[0];
     }
     return next();
   } catch (error) {
     return next({
       log: 'eventController.createEvent error',
-      message: { err: 'Error creating event in database' },
+      message: { err: error.message },
     });
   }
 };
