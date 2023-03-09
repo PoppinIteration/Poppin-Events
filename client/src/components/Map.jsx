@@ -47,7 +47,19 @@ function Map() {
       };
 
       const getTicketMasterEvents = async () => {
-        const response = await axios.get("/api/ticketmaster/34.1654/-118.6090");
+        
+        // const posi = {};
+        // navigator.geolocation.getCurrentPosition((position) => {
+        //   posi.lat = position.coords.latitude;
+        //   posi.lng = position.coords.longitude;
+        // })
+
+        // console.log('This posi is: ', Object.keys(posi));
+        // console.log('This is lat: ', posi.lat);
+        // console.log('This is lng: ', posi.lng);
+        const response = await axios.get("/api/ticketmaster/33.832450/-118.343890");
+
+        // const response = await axios.get(`/api/ticketmaster/${posi.lat}/${posi.lng}`);
         const { data } = response;
         // console.log("getTicketMasterEvents: ", Object.values(data));
         setTicketMasterData(Object.values(data));
@@ -172,14 +184,14 @@ function Map() {
             // Lines 170 & 171: Have to parseFloat() to avoid type coercion
             return (
               <MarkerF
-                key={index}
+                key={event.ticketmaster_evt_id}
                 icon={{
                   url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
                 }}
                 title={event.name}
                 position={{
-                  lat: parseFloat(event.lat),
-                  lng: parseFloat(event.lng),
+                  lat: parseFloat(event.location.lat),
+                  lng: parseFloat(event.location.lng),
                 }}
                 onClick={() => setEventData(event)}
               />
