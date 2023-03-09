@@ -32,6 +32,8 @@ const Login = (props) => {
   
   return (
     <div className="login-container">
+    {/* https://www.npmjs.com/package/react-google-login */}
+      {/* https://vitejs.dev/guide/env-and-mode.html */}
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OATH_CLIENT_ID}>
         <GoogleLogin
           render={(renderProps) => (

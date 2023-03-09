@@ -21,7 +21,7 @@ export default function MarkerCreator(props) {
   let autocomplete = null;
 
   // submit handler
-  const handleSubmit = async (e) => {
+  const eventSubmit = async (e) => {
     e.preventDefault();
     try {
       console.log("in MARKER CREATOR user is: ", user.id);
@@ -80,7 +80,7 @@ export default function MarkerCreator(props) {
   return (
     <div className="create-event-container box-shadow-1">
       <h4>Create an Event</h4>
-      <form id="add-event" className="create-form" onSubmit={handleSubmit}>
+      <form id="add-event" className="create-form" onSubmit={eventSubmit}>
         <label className="screen-reader-text" htmlFor="event-name">
           Name your event:
         </label>
