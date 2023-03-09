@@ -4,6 +4,7 @@ const eventController = require('../controllers/eventController');
 const sessionController = require('../controllers/sessionController');
 const tmEventController = require('../controllers/tmEventController');
 const geocodeController = require('../controllers/geoCodeController');
+const attendeeController = require('../controllers/attendeeController');
 
 const router = express.Router();
 
@@ -57,11 +58,22 @@ router.get(
   (req, res) => res.status(200).json(res.locals.events),
 );
 
-// Save a Ticketmaster event in the database
+// GET all rsvp events for a user
+router.get(
+  '/rsvp', // GET request to /api/rsvp?userID=<userID>
+  attendeeController.getEventsByUser,
+  (req, res) => res.status(200).json(res.locals.rsvpEvents),
+);
+
+// RSVP to an event - create an event if necessary, then add the user to attendees table and return the new row on the response object
 router.post(
-  '/ticketmaster/:lat/:lng',
+  '/rsvp/:rsvp_level',
+  eventController.findEvent,
   eventController.createEvent,
-  (req, res) => res.status(200).json(res.locals.id),
+  attendeeController.addAttendee,
+  (req, res) => {
+    return res.status(200).json(res.locals.newAttendee);
+  },
 );
 
 // Checks for active sessions

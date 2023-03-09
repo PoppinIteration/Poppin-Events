@@ -10,6 +10,36 @@ const EVENT_ORIGIN_TYPE = {
 
 const eventController = {};
 
+// find a specific event in the db that the user is rsvp-ing to, to see if we need to add the event to the db
+eventController.findEvent = (req, res, next) => {
+  // check what type of event it is - if it is a user event then it is already in the events table then return next()
+  const { evt_origin_type_id } = req.body;
+  if (evt_origin_type_id === 1) {
+    res.locals.dbEvent = req.body.id;
+    return next();
+  }
+  // if the event is a ticketmaster event then we need to check if it's already in the events table
+  const { ticketmaster_evt_id } = req.body;
+  const queryStr = 'SELECT id, ticketmaster_evt_id FROM events WHERE evt_origin_type_id = $1';
+  db.query(queryStr, [evt_origin_type_id])
+    .then((data) => {
+      const ticketmasterEvents = data.rows;
+      for (let i = 0; i < ticketmasterEvents.length; i += 1) {
+        if (ticketmasterEvents[i].ticketmaster_evt_id === ticketmaster_evt_id) {
+          res.locals.dbEvent = ticketmasterEvents[i].id;
+          return next();
+        }
+      }
+      // if the ticketmaster event ID is not in the events table then we need to create an event
+      res.locals.dbEvent = false;
+      return next();
+    })
+    .catch((error) => next({
+      log: 'Error in eventController.findEvent',
+      message: { err: error },
+    }));
+};
+
 // get all events from database
 eventController.getEvents = async (req, res, next) => {
   try {
