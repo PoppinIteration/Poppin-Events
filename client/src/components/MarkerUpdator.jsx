@@ -46,10 +46,20 @@ export default function MarkerUpdator(props) {
         locName,
         date,
         description,
-        userID: id,
-        eventID: props.eventData.id
+        endDate: null,  // TODO: Figure out how we'll fill out this portion
+        image_url: null, // TODO: Ticket master, Figure out how we'll fill out this portion later
+        organizer: {
+          id,
+          username,
+          email,
+          picture
+        },
+        ticketmaster_evt_id: null,
+        rsvp_url: null,
+        evt_origin_type_id: 1, // user created = 1, ticketmaster = 2
+        id: props.eventData.id
       };
-      console.log('eventID: ', props.eventData.id);
+      // console.log('eventID: ', props.eventData.id);
       // encode the address and geocode it
       const encoded = address.replaceAll(' ', '+');
       const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encoded}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
@@ -62,9 +72,7 @@ export default function MarkerUpdator(props) {
       // send the update request to the database
       const eventID = await axios.put('/api/events', event);
       event.eventID = eventID.data;
-      console.log('WHY THE FUCK ARE WE DOING THIS: ', event.eventID);
-      event.email = email;
-      event.organizer = username;
+      // console.log('WHY THE FUCK ARE WE DOING THIS: ', event.eventID);
       // replace the MarkerData in state with the updated array
       props.setMarkerData(prevMarkerData => {
         // remove the edited event
