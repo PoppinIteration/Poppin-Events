@@ -42,14 +42,14 @@ function Map() {
       const getEvents = async () => {
         const response = await axios.get("/api/events");
         const { data } = response;
-        console.log(data);
+        // console.log(data);
         setMarkerData(data);
       };
 
       const getTicketMasterEvents = async () => {
         const response = await axios.get("/api/ticketmaster/34.1654/-118.6090");
         const { data } = response;
-        console.log("getTicketMasterEvents: ", Object.values(data));
+        // console.log("getTicketMasterEvents: ", Object.values(data));
         setTicketMasterData(Object.values(data));
       };
       getEvents();
@@ -157,10 +157,10 @@ function Map() {
           ))}
         {ticketMasterData.length > 0 &&
           ticketMasterData.map((event, index) => {
-            console.log({
-              lat: event.lat,
-              lng: event.lng,
-            });
+            // console.log({
+            //   lat: event.lat,
+            //   lng: event.lng,
+            // });
             // Lines 170 & 171: Have to parseFloat() to avoid type coercion
             return (
               <MarkerF

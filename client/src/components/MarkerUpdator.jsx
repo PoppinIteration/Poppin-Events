@@ -49,6 +49,7 @@ export default function MarkerUpdator(props) {
         userID: id,
         eventID: props.eventData.id
       };
+
       // encode the address and geocode it
       const encoded = address.replaceAll(' ', '+');
       const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encoded}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
@@ -73,6 +74,7 @@ export default function MarkerUpdator(props) {
         // spread in the filtered old events with the new event added in
         return [...updatedMarkers, event];
       });
+      // console.log('MarkerUpdator: updatedMarkers: ', updatedMarkers);
       // update window closes and is replaced with add event
       props.setUpdating(false);
       //console.log('most recent marker is: ', markerData[markerData.length - 1]);
