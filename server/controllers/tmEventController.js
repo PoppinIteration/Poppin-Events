@@ -51,7 +51,7 @@ tmEventController.getEvents = (req, res, next) => {
             id: 1,
             name: 'Ticketmaster',
             email: 'customer_support@ticketmaster.com',
-            picure: 'https://play-lh.googleusercontent.com/KmWVboPY-BCCfiflJ-AYCPGBv86QLMsXsSpvQksC0DVR8ENV0lh-lwHnXrekpHwbQA=w240-h480-rw',
+            picture: 'https://play-lh.googleusercontent.com/KmWVboPY-BCCfiflJ-AYCPGBv86QLMsXsSpvQksC0DVR8ENV0lh-lwHnXrekpHwbQA=w240-h480-rw',
           },
         };
         extracted.push(details);
