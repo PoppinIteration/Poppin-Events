@@ -16,6 +16,15 @@ button, input {
 button {
   cursor: pointer;
 }
+.rsvp-button {
+  width: 150px;
+  height: 30px;
+}
+
+.event-buttons-container {
+  margin-top: 5px;
+}
+
 .edit-button, .delete-button {
   width: 100px;
   height: 30px;

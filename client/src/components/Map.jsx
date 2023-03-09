@@ -18,6 +18,7 @@ function Map() {
   // state for the data for marker from the database
   const [markerData, setMarkerData] = useState([]);
   const [ticketMasterData, setTicketMasterData] = useState([]);
+  const [rsvp, setRSVP] = useState(0);
 
   // state to display the event data to the page after clicking a marker
   const [eventData, setEventData] = useState(null);
@@ -57,10 +58,11 @@ function Map() {
         // console.log('This posi is: ', Object.keys(posi));
         // console.log('This is lat: ', posi.lat);
         // console.log('This is lng: ', posi.lng);
-        const response = await axios.get("/api/ticketmaster/33.832450/-118.343890");
+        const response = await axios.get('/api/ticketmaster/34.0522/-118.2437');
 
         // const response = await axios.get(`/api/ticketmaster/${posi.lat}/${posi.lng}`);
         const { data } = response;
+        console.log(data);
         // console.log("getTicketMasterEvents: ", Object.values(data));
         setTicketMasterData(Object.values(data));
       };
@@ -223,7 +225,15 @@ function Map() {
               <li className="info-list-item">
                 Date: {new Date(eventData.date).toLocaleString()}
               </li>
-              <li className="info-list-item">RSVP: {eventData.organizer.email}</li>
+               {/*<li className="info-list-item">RSVP: {eventData.organizer.email}</li> */}
+               <li> RSVP: 
+               <div>
+               <button className="rsvp-button "> Not Going</button>
+               <button className="rsvp-button "> Maybe Going</button>
+               <button className="rsvp-button "> Likely Going</button>
+               <button className="rsvp-button "> Definitely Going</button>
+               </div>
+               </li>
             </ul>
             {/* If the user is the creator of the event, display the edit and delete buttons */}
             {eventData.organizer.email === user.email && (
