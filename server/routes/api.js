@@ -69,7 +69,7 @@ router.get(
 router.post(
   '/rsvp/:rsvp_level',
   eventController.findEvent,
-  // eventController.createEvent,
+  eventController.createEvent,
   attendeeController.addAttendee,
   (req, res) => {
     return res.status(200).json(res.locals.newAttendee);
