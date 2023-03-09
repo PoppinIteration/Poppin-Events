@@ -58,14 +58,13 @@ router.get(
   (req, res) => res.status(200).json(res.locals.events),
 );
 
-// RSVP to an event - create an event if necessary, then add to attendees table
+// RSVP to an event - create an event if necessary, then add the user to attendees table and return the new row on the response object
 router.post(
   '/rsvp/:rsvp_level',
   eventController.findEvent,
   // eventController.createEvent,
   attendeeController.addAttendee,
   (req, res) => {
-    console.log('step 3: ', res.locals.newAttendee);
     return res.status(200).json(res.locals.newAttendee);
   },
 );

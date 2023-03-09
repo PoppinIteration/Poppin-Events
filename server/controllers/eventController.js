@@ -4,9 +4,9 @@ const db = require('../models/dbModel');
 
 const eventController = {};
 
-// find a specific event in the db that the user is rsvp-ing to
+// find a specific event in the db that the user is rsvp-ing to, to see if we need to add the event to the db
 eventController.findEvent = (req, res, next) => {
-  // check what type of event it is - if it is a user event then it is already in the events table and we can move on
+  // check what type of event it is - if it is a user event then it is already in the events table then return next()
   const { evt_origin_type_id } = req.body;
   if (evt_origin_type_id === 1) {
     res.locals.dbEvent = req.body.id;
@@ -18,28 +18,14 @@ eventController.findEvent = (req, res, next) => {
   db.query(queryStr, [evt_origin_type_id])
     .then((data) => {
       const ticketmasterEvents = data.rows;
-      console.log('ticketmasterEvents: ', ticketmasterEvents);
-      
-      ticketmasterEvents.forEach((event) => {
-        console.log('event: ', event);
-        if (event.ticketmaster_evt_id === ticketmaster_evt_id) {
-          res.locals.dbEvent = event.id;
-          console.log('step 0: ', res.locals.dbEvent);
+      for (let i = 0; i < ticketmasterEvents.length; i += 1) {
+        if (ticketmasterEvents[i].ticketmaster_evt_id === ticketmaster_evt_id) {
+          res.locals.dbEvent = ticketmasterEvents[i].id;
           return next();
         }
-      });
-
-      // for (let i = 0; i < ticketmasterEvents.length; i += 1) {
-      //   console.log('ticketmasterEvents[i]: ', ticketmasterEvents[i]);
-      //   if (ticketmasterEvents[i].ticketmaster_evt_id === ticketmaster_evt_id) {
-      //     res.locals.dbEvent = ticketmasterEvents[i].id;
-      //     return next();
-      //   }
-      // }
-
-      console.log('outer function');
-      // if the ticketmaster event ID is not in the event table then we need to create an event
-      res.locals.dbEvent = false; // add an if statement at the beginning of eventController.createEvent to check if (!res.locals.dbEvent) in which case continue
+      }
+      // if the ticketmaster event ID is not in the events table then we need to create an event
+      res.locals.dbEvent = false;
       return next();
     })
     .catch((error) => next({
