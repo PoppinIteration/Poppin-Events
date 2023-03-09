@@ -58,7 +58,9 @@ export default function MarkerCreator(props) {
         ticketmaster_evt_id: null,
         rsvp_url: null,
         evt_origin_type_id: 1, // user created = 1, ticketmaster = 2
+        // location is added below on line 72 - 74 after we've received data from google's geocode api
       };
+
       // encode the address
       const encoded = address.replaceAll(" ", "+");
       // geocode the address (https://developers.google.com/maps/documentation/geocoding/requests-geocoding)
@@ -67,12 +69,10 @@ export default function MarkerCreator(props) {
       }`;
       const response = await axios.get(url);
       const data = response.data.results[0];
-      event.location = [
-        {
+      event.location = {
           lat: data.geometry.location.lat,
           lng: data.geometry.location.lng,
-        },
-      ];
+      }
       // send the post request to the server
       const eventID = await axios.post("/api/events", event);
       // add other pairs to the event object for the front-end to read
@@ -159,9 +159,9 @@ export default function MarkerCreator(props) {
           value={date}
           required
         />
-        <label className="screen-reader-text" htmlFor="event-date">
+        {/* <label className="screen-reader-text" htmlFor="event-date">
           End Date:
-        </label>
+        </label> */}
         {/* 
         <input
           placeholder="Date and time"

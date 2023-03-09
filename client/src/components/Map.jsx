@@ -147,20 +147,28 @@ function Map() {
         {/* If markerData is changed, places corresponding Markers in the map */}
         {/* <MarkerF/> component imported from @react-google-maps/api renders markers on the map */}
         {markerData.length > 0 &&
-          markerData.map((event) => (
+          markerData.map((event) => {
+            // console.log('User created Events: ', event);
+            
+            return (
             <MarkerF
               key={event.id}
               title={event.name}
-              position={event.location[0]}
+              // position={event.location[0]}
+              position={{
+                lat: parseFloat(event.location.lat),
+                lng: parseFloat(event.location.lng),
+              }}
               onClick={() => setEventData(event)}
             />
-          ))}
+          )})}
         {ticketMasterData.length > 0 &&
           ticketMasterData.map((event, index) => {
             // console.log({
             //   lat: event.lat,
             //   lng: event.lng,
             // });
+            // console.log('ticketMaster Events: ', event);
             // Lines 170 & 171: Have to parseFloat() to avoid type coercion
             return (
               <MarkerF
@@ -190,22 +198,23 @@ function Map() {
           />
         )}
         {/* If eventData and user are not null, display the event data */}
+        {/* TODO: Ensure this will work for both ticketmaster and user created events once backends changes have been merged into dev  */}
         {eventData && user && (
           <div className="info-container box-shadow-1">
             <h2 className="event-title">{eventData.name}</h2>
             <p className="event-description"> {eventData.description}</p>
             <ul className="info-list">
               <li className="info-list-item">
-                Organizer: {eventData.organizer}
+                Organizer: {eventData.organizer.username}
               </li>
               <li className="info-list-item">Location: {eventData.address}</li>
               <li className="info-list-item">
                 Date: {new Date(eventData.date).toLocaleString()}
               </li>
-              <li className="info-list-item">RSVP: {eventData.email}</li>
+              <li className="info-list-item">RSVP: {eventData.organizer.email}</li>
             </ul>
             {/* If the user is the creator of the event, display the edit and delete buttons */}
-            {eventData.email === user.email && (
+            {eventData.organizer.email === user.email && (
               <div className="event-buttons-container">
                 <button
                   className="edit-button "

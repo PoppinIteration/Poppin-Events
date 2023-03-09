@@ -38,7 +38,7 @@ export default function MarkerUpdator(props) {
     e.preventDefault();
     try {
       console.log('in MARKER CREATOR user is: ', user.id);
-      const { id, email, name: username } = user;
+      const { id, email, picture, name: username } = user;
       // event object for the database
       const event = {
         name,
