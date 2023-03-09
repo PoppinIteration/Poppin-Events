@@ -16,8 +16,10 @@ export default function MarkerCreator(props) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [date, setDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [locName, setLocName] = useState("");
+  // const [endDate,]
   let autocomplete = null;
 
   // submit handler
@@ -25,15 +27,37 @@ export default function MarkerCreator(props) {
     e.preventDefault();
     try {
       console.log("in MARKER CREATOR user is: ", user.id);
-      const { id, email, name: username } = user;
+      const { id, email, picture, name: username } = user;
       // new event object for database
+      // const event = {
+      //   name,
+      //   address,
+      //   locName,
+      //   date,
+      //   description,
+      //   userID: id,
+      // };
+
+
+      // Modified event object: testing
       const event = {
         name,
         address,
-        locName,
+        id: null,
         date,
         description,
-        userID: id,
+        locName,
+        endDate: null,  // TODO: Figure out how we'll fill out this portion
+        image_url: null, // TODO: Ticket master, Figure out how we'll fill out this portion later
+        organizer: {
+          id,
+          username,
+          email,
+          picture
+        },
+        ticketmaster_evt_id: null,
+        rsvp_url: null,
+        evt_origin_type_id: 1, // user created = 1, ticketmaster = 2
       };
       // encode the address
       const encoded = address.replaceAll(" ", "+");
@@ -53,8 +77,6 @@ export default function MarkerCreator(props) {
       const eventID = await axios.post("/api/events", event);
       // add other pairs to the event object for the front-end to read
       event.id = eventID.data.id;
-      event.email = email;
-      event.organizer = username;
       // add the new event into state (from parent component) to rerender the map + markers
       props.setMarkerData((prevMarkerData) => [...prevMarkerData, event]);
     } catch (err) {
@@ -137,6 +159,17 @@ export default function MarkerCreator(props) {
           value={date}
           required
         />
+        <label className="screen-reader-text" htmlFor="event-date">
+          End Date:
+        </label>
+        {/* 
+        <input
+          placeholder="Date and time"
+          id="event-end-date"
+          type="datetime-local"
+          onChange={(e) => setEndDate(e.target.value)}
+          value={date}
+        /> */}
         <button className="button-primary">Submit</button>
       </form>
     </div>

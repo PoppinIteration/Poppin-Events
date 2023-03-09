@@ -49,7 +49,7 @@ export default function MarkerUpdator(props) {
         userID: id,
         eventID: props.eventData.id
       };
-
+      console.log('eventID: ', props.eventData.id);
       // encode the address and geocode it
       const encoded = address.replaceAll(' ', '+');
       const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encoded}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
@@ -62,6 +62,7 @@ export default function MarkerUpdator(props) {
       // send the update request to the database
       const eventID = await axios.put('/api/events', event);
       event.eventID = eventID.data;
+      console.log('WHY THE FUCK ARE WE DOING THIS: ', event.eventID);
       event.email = email;
       event.organizer = username;
       // replace the MarkerData in state with the updated array
