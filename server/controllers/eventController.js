@@ -131,6 +131,15 @@ eventController.createEvent = async (req, res, next) => {
       const { lat, lng } = req.body.location;
       const organizer_id = req.body.organizer.id;
 
+      // Make sure organizer_id and evt_origin_type_id are populated in the request body
+      // If not, throw an error
+      if (organizer_id === undefined
+        || organizer_id === null
+        || evt_origin_type_id === undefined
+        || evt_origin_type_id === null) {
+        throw new Error('Missing required fields');
+      }
+
       // updated: insert the event into the database using subquery for the organizer id
       const addEventQuery = `INSERT INTO events 
         (
@@ -190,7 +199,7 @@ eventController.updateEvent = async (req, res, next) => {
   const {
     name, description, date, locName, address, userID, eventID,
   } = req.body;
-  const { lat, lng } = req.body.location[0];
+  const { lat, lng } = req.body.location;
   const values = [name, description, date, locName, address, lat, lng, userID, eventID];
   const text = 'UPDATE events SET name = $1, description = $2, date = $3, loc_name = $4, address = $5, lat = $6, lng = $7 WHERE organizer_id = $8 AND id = $9;';
   try {
