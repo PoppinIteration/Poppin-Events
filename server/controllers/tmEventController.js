@@ -2,14 +2,14 @@ const tmEventController = {};
 
 // get all events in a specific city
 tmEventController.getEvents = (req, res, next) => {
-  console.log('inTMEVENTCONTROLLER')
+  console.log('inTMEVENTCONTROLLER');
   const { city, state } = res.locals;
   const { TICKETMASTER_API_KEY } = process.env;
-  // console.log('city: ', city);
+  console.log('city: ', city);
   // console.log('state: ', state);
   // console.log('tm API key: ', TICKETMASTER_API_KEY);
 
-  fetch(`https://app.ticketmaster.com/discovery/v2/events.json?city=${city}&state=${state}&size=25&apikey=${TICKETMASTER_API_KEY}`)
+  fetch(`https://app.ticketmaster.com/discovery/v2/events.json?city=${city}&state=${state}&size=50&apikey=${TICKETMASTER_API_KEY}`)
     .then((response) => response.json())
     .then((data) => {
       const myEvents = data._embedded.events;
@@ -17,7 +17,7 @@ tmEventController.getEvents = (req, res, next) => {
       const extracted = [];
 
       // only pull the first 10 events
-      for (let i = 0; i < 25; i += 1) {
+      for (let i = 0; i < 50; i += 1) {
         // console.log('i value', i);
         // console.log('eventID: ', myEvents[i].id);
         // console.log('event name: ', myEvents[i].name);
@@ -39,7 +39,7 @@ tmEventController.getEvents = (req, res, next) => {
             {
               lat: myEvents[i]._embedded.venues[0].location.latitude,
               lng: myEvents[i]._embedded.venues[0].location.longitude,
-            }
+            },
           ],
           locName: myEvents[i]._embedded.venues[0].name,
           end_date: null,
