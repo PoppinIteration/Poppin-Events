@@ -169,7 +169,7 @@ eventController.updateEvent = async (req, res, next) => {
   const {
     name, description, date, locName, address, userID, eventID,
   } = req.body;
-  const { lat, lng } = req.body.location[0];
+  const { lat, lng } = req.body.location;
   const values = [name, description, date, locName, address, lat, lng, userID, eventID];
   const text = 'UPDATE events SET name = $1, description = $2, date = $3, loc_name = $4, address = $5, lat = $6, lng = $7 WHERE organizer_id = $8 AND id = $9;';
   try {
