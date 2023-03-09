@@ -4,6 +4,50 @@ const db = require('../models/dbModel');
 
 const eventController = {};
 
+// find a specific event in the db that the user is rsvp-ing to
+eventController.findEvent = (req, res, next) => {
+  // check what type of event it is - if it is a user event then it is already in the events table and we can move on
+  const { evt_origin_type_id } = req.body;
+  if (evt_origin_type_id === 1) {
+    res.locals.dbEvent = req.body.id;
+    return next();
+  }
+  // if the event is a ticketmaster event then we need to check if it's already in the events table
+  const { ticketmaster_evt_id } = req.body;
+  const queryStr = 'SELECT id, ticketmaster_evt_id FROM events WHERE evt_origin_type_id = $1';
+  db.query(queryStr, [evt_origin_type_id])
+    .then((data) => {
+      const ticketmasterEvents = data.rows;
+      console.log('ticketmasterEvents: ', ticketmasterEvents);
+      
+      ticketmasterEvents.forEach((event) => {
+        console.log('event: ', event);
+        if (event.ticketmaster_evt_id === ticketmaster_evt_id) {
+          res.locals.dbEvent = event.id;
+          console.log('step 0: ', res.locals.dbEvent);
+          return next();
+        }
+      });
+
+      // for (let i = 0; i < ticketmasterEvents.length; i += 1) {
+      //   console.log('ticketmasterEvents[i]: ', ticketmasterEvents[i]);
+      //   if (ticketmasterEvents[i].ticketmaster_evt_id === ticketmaster_evt_id) {
+      //     res.locals.dbEvent = ticketmasterEvents[i].id;
+      //     return next();
+      //   }
+      // }
+
+      console.log('outer function');
+      // if the ticketmaster event ID is not in the event table then we need to create an event
+      res.locals.dbEvent = false; // add an if statement at the beginning of eventController.createEvent to check if (!res.locals.dbEvent) in which case continue
+      return next();
+    })
+    .catch((error) => next({
+      log: 'Error in eventController.findEvent',
+      message: { err: error },
+    }));
+};
+
 // get all events from database
 eventController.getEvents = async (req, res, next) => {
   try {
@@ -24,7 +68,9 @@ eventController.getEvents = async (req, res, next) => {
 eventController.createEvent = async (req, res, next) => {
   try {
     console.log('in event creator with req: ', req.body);
-    const { name, description, date, locName, address, userID } = req.body;
+    const {
+      name, description, date, locName, address, userID,
+    } = req.body;
     const { lat, lng } = req.body.location[0];
     // insert the event into the database using a subquery for the organizer id
     const addEventQuery = 'INSERT INTO events (name, description, date, loc_name, address, lat, lng, organizer_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id';
