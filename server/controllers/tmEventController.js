@@ -2,6 +2,7 @@ const tmEventController = {};
 
 // get all events in a specific city
 tmEventController.getEvents = (req, res, next) => {
+  console.log('inTMEVENTCONTROLLER')
   const { city, state } = res.locals;
   const { TICKETMASTER_API_KEY } = process.env;
   // console.log('city: ', city);
