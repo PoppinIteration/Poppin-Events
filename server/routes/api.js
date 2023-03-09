@@ -58,6 +58,13 @@ router.get(
   (req, res) => res.status(200).json(res.locals.events),
 );
 
+// GET all rsvp events for a user
+router.get(
+  '/rsvp', // GET request to /api/rsvp?userID=<userID>
+  attendeeController.getEventsByUser,
+  (req, res) => res.status(200).json(res.locals.rsvpEvents),
+);
+
 // RSVP to an event - create an event if necessary, then add the user to attendees table and return the new row on the response object
 router.post(
   '/rsvp/:rsvp_level',

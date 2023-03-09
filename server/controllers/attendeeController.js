@@ -2,6 +2,23 @@ const db = require('../models/dbModel');
 
 const attendeeController = {};
 
+attendeeController.getEventsByUser = (req, res, next) => {
+  const { userID } = req.query;
+
+  const queryStr = 'SELECT e.*, a.rsvp_level_id FROM events e INNER JOIN attendees a ON e.id = a.events_id WHERE a.users_id = $1';
+  db.query(queryStr, [userID])
+    .then((data) => {
+      const rsvpEvents = data.rows;
+      console.log('Number of RSVP events returned for the user: ', rsvpEvents.length);
+      res.locals.rsvpEvents = rsvpEvents;
+      return next();
+    })
+    .catch((error) => next({
+      log: 'Error in attendeeController.getEventsByUser',
+      message: { err: error },
+    }));
+};
+
 attendeeController.addAttendee = (req, res, next) => {
   const user_id = req.body.organizer.id;
   const rsvp_level = Number(req.params.rsvp_level);
