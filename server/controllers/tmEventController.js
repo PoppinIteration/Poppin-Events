@@ -21,12 +21,10 @@ tmEventController.getEvents = (req, res, next) => {
           date: myEvents[i].dates.start.dateTime,
           description: '',
           id: null,
-          location: [
-            {
-              lat: myEvents[i]._embedded.venues[0].location.latitude,
-              lng: myEvents[i]._embedded.venues[0].location.longitude,
-            },
-          ],
+          location: {
+            lat: myEvents[i]._embedded.venues[0].location.latitude,
+            lng: myEvents[i]._embedded.venues[0].location.longitude,
+          },
           locName: myEvents[i]._embedded.venues[0].name,
           end_date: null,
           image_url: myEvents[i].images[0].url,
