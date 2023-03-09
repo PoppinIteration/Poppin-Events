@@ -65,10 +65,10 @@ export default function MarkerUpdator(props) {
       const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encoded}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
       const response = await axios.get(url);
       const data = response.data.results[0];
-      event.location = [{
+      event.location = {
         lat: data.geometry.location.lat,
         lng: data.geometry.location.lng,
-      }];
+      };
       // send the update request to the database
       const eventID = await axios.put('/api/events', event);
       event.eventID = eventID.data;
