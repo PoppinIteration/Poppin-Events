@@ -100,78 +100,80 @@ export default function MarkerCreator(props) {
 
   // <Autocomplete /> component imported from @react-google-maps/api to have autocomplete address
   return (
-    <div className="create-event-container box-shadow-1">
-      <h4>Create an Event</h4>
-      <form id="add-event" className="create-form" onSubmit={eventSubmit}>
-        <label className="screen-reader-text" htmlFor="event-name">
-          Name your event:
-        </label>
-        <input
-          placeholder="Name"
-          id="event-name"
-          type="text"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          required
-        />
-        <label className="screen-reader-text" htmlFor="event-description">
-          Describe your event:
-        </label>
-        <input
-          placeholder="Description"
-          id="event-description"
-          type="text"
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-          required
-        />
-        <label className="screen-reader-text" htmlFor="event-location">
-          Event Location:
-        </label>
-        <input
-          placeholder="Location"
-          id="event-location"
-          type="text"
-          onChange={(e) => setLocName(e.target.value)}
-          value={locName}
-          required
-        />
-        <label className="screen-reader-text" htmlFor="event-address">
-          Event Address:
-        </label>
-        <Autocomplete
-          placeholder="Enter address"
-          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-          options={{ types: [] }} // empty array means select all types
-          onPlaceSelected={(place) => {
-            console.log("PLACE in autocomplete IS: ", place);
-            setAddress(place.formatted_address);
-          }}
-        />
-        <label className="screen-reader-text" htmlFor="event-date">
-          Date:
-        </label>
-        <input
-          placeholder="Date and time"
-          id="event-date"
-          type="datetime-local"
-          onChange={(e) => setDate(e.target.value)}
-          value={date}
-          required
-        />
-        {/* <label className="screen-reader-text" htmlFor="event-date">
-          End Date:
-        </label> */}
-        {/* 
-        <input
-          placeholder="Date and time"
-          id="event-end-date"
-          type="datetime-local"
-          onChange={(e) => setEndDate(e.target.value)}
-          value={date}
-        /> */}
-        <button className="button-primary">Submit</button>
-      </form>
+    <div className ='create-event-and-rsvp'>
+      <div className="create-event-container box-shadow-1">
+        <h4>Create an Event</h4>
+        <form id="add-event" className="create-form" onSubmit={eventSubmit}>
+          <label className="screen-reader-text" htmlFor="event-name">
+            Name your event:
+          </label>
+          <input
+            placeholder="Name"
+            id="event-name"
+            type="text"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            required
+          />
+          <label className="screen-reader-text" htmlFor="event-description">
+            Describe your event:
+          </label>
+          <input
+            placeholder="Description"
+            id="event-description"
+            type="text"
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+            required
+          />
+          <label className="screen-reader-text" htmlFor="event-location">
+            Event Location:
+          </label>
+          <input
+            placeholder="Location"
+            id="event-location"
+            type="text"
+            onChange={(e) => setLocName(e.target.value)}
+            value={locName}
+            required
+          />
+          <label className="screen-reader-text" htmlFor="event-address">
+            Event Address:
+          </label>
+          <Autocomplete
+            placeholder="Enter address"
+            apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+            options={{ types: [] }} // empty array means select all types
+            onPlaceSelected={(place) => {
+              console.log("PLACE in autocomplete IS: ", place);
+              setAddress(place.formatted_address);
+            }}
+          />
+          <label className="screen-reader-text" htmlFor="event-date">
+            Date:
+          </label>
+          <input
+            placeholder="Date and time"
+            id="event-date"
+            type="datetime-local"
+            onChange={(e) => setDate(e.target.value)}
+            value={date}
+            required
+          />
+          {/* <label className="screen-reader-text" htmlFor="event-date">
+            End Date:
+          </label> */}
+          {/* 
+          <input
+            placeholder="Date and time"
+            id="event-end-date"
+            type="datetime-local"
+            onChange={(e) => setEndDate(e.target.value)}
+            value={date}
+          /> */}
+          <button className="button-primary">Submit</button>
+        </form>
+      </div>
     </div>
   );
 }

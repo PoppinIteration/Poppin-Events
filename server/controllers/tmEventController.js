@@ -5,11 +5,11 @@ tmEventController.getEvents = (req, res, next) => {
   console.log("inTMEVENTCONTROLLER");
   const { city, state } = res.locals;
   const { TICKETMASTER_API_KEY } = process.env;
-  // console.log('city', city)
-  // console.log('state', state)
+  console.log('city', city)
+  console.log('state', state)
 
   fetch(
-    `https://app.ticketmaster.com/discovery/v2/events.json?city=${city}&state=${state}&size=50&apikey=${TICKETMASTER_API_KEY}`
+    `https://app.ticketmaster.com/discovery/v2/events.json?city=${city}&state=${state}&size=200&apikey=${TICKETMASTER_API_KEY}`,
   )
     .then((response) => response.json())
     .then((data) => {
@@ -17,7 +17,7 @@ tmEventController.getEvents = (req, res, next) => {
       const extracted = [];
 
       // only pull the first n events
-      for (let i = 0; i < 50; i += 1) {
+      for (let i = 0; i < 200; i += 1) {
         // each event details
         const details = {
           name: myEvents[i].name,
