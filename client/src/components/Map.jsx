@@ -7,6 +7,7 @@ import axios from "axios";
 import MarkerCreator from "./MarkerCreator";
 import MarkerUpdator from "./MarkerUpdator";
 import { UserContext } from "./UserContext";
+import RsvpDisplay from "./RsvpDisplay";
 
 function Map() {
   // state for map center positioning
@@ -18,6 +19,7 @@ function Map() {
   // state for the data for marker from the database
   const [markerData, setMarkerData] = useState([]);
   const [ticketMasterData, setTicketMasterData] = useState([]);
+  const [rsvp, setRSVP] = useState(0);
 
   // state to display the event data to the page after clicking a marker
   const [eventData, setEventData] = useState(null);
@@ -42,14 +44,26 @@ function Map() {
       const getEvents = async () => {
         const response = await axios.get("/api/events");
         const { data } = response;
-        console.log(data);
+        // console.log(data);
         setMarkerData(data);
       };
 
       const getTicketMasterEvents = async () => {
-        const response = await axios.get("/api/ticketmaster/34.1654/-118.6090");
+        // const posi = {};
+        // navigator.geolocation.getCurrentPosition((position) => {
+        //   posi.lat = position.coords.latitude;
+        //   posi.lng = position.coords.longitude;
+        // })
+
+        // console.log('This posi is: ', Object.keys(posi));
+        // console.log('This is lat: ', posi.lat);
+        // console.log('This is lng: ', posi.lng);
+        const response = await axios.get('/api/ticketmaster/34.0522/-118.2437');
+
+        // const response = await axios.get(`/api/ticketmaster/${posi.lat}/${posi.lng}`);
         const { data } = response;
-        console.log("getTicketMasterEvents: ", Object.values(data));
+        console.log(data);
+        // console.log("getTicketMasterEvents: ", Object.values(data));
         setTicketMasterData(Object.values(data));
       };
       getEvents();
@@ -109,21 +123,13 @@ function Map() {
     setEventData(null);
   };
 
-  // const generateTicketMasterEvents = () => {
-  //   const arr = [];
-  //   if (ticketMasterData.length > 0) {
-  //     for (const [id, eventDetails] of Object.entries(ticketMasterData)) {
-  //       arr.push(
-  //         <MarkerF
-  //           key={id}
-  //           title={eventData.name}
-  //           position={{lat: eventData.lat, lng: eventData.lng}}
-  //           />
-  //         );
-  //       }
-  //     }
-  //   return arr;
-  // };
+  const sendRSVP = async (e) => {
+    const rsvpVal = e.target.value;
+    console.log(eventData);
+
+    const response = await axios.post(`/api/rsvp/${rsvpVal}`, eventData);
+    console.log(response);
+  };
 
   // ensures that a div exists for the map even when the map API key is not loaded successfully. DO NOT DELETE
   if (!isLoaded) return <div>Loading... 🥺</div>;
@@ -148,64 +154,93 @@ function Map() {
         {/* <MarkerF/> component imported from @react-google-maps/api renders markers on the map */}
         {markerData.length > 0 &&
           markerData.map((event) => (
+            // console.log('User created Events: ', event);
+
             <MarkerF
               key={event.id}
               title={event.name}
-              position={event.location[0]}
+              // position={event.location[0]}
+              position={{
+                lat: parseFloat(event.location.lat),
+                lng: parseFloat(event.location.lng),
+              }}
               onClick={() => setEventData(event)}
             />
           ))}
         {ticketMasterData.length > 0 &&
-          ticketMasterData.map((event, index) => {
-            console.log({
-              lat: event.lat,
-              lng: event.lng,
-            });
+          ticketMasterData.map((event, index) => (
+            // console.log({
+            //   lat: event.lat,
+            //   lng: event.lng,
+            // });
+            // console.log('ticketMaster Events: ', event);
             // Lines 170 & 171: Have to parseFloat() to avoid type coercion
-            return (
-              <MarkerF
-                key={index}
-                icon={{
-                  url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-                }}
-                title={event.name}
-                position={{
-                  lat: parseFloat(event.lat),
-                  lng: parseFloat(event.lng),
-                }}
-                onClick={() => setEventData(event)}
-              />
-            );
-          })}
+            <MarkerF
+              key={event.ticketmaster_evt_id}
+              icon={{
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+              }}
+              title={event.name}
+              position={{
+                lat: parseFloat(event.location.lat),
+                lng: parseFloat(event.location.lng),
+              }}
+              onClick={() => setEventData(event)}
+            />
+          ))}
       </GoogleMap>
       {/* If a Marker is being added, call MarkerCreator and if updated, call MarkerUpdator */}
-      <div className="right-section">
-        {!updating && <MarkerCreator setMarkerData={setMarkerData} />}
-        {updating && (
-          <MarkerUpdator
-            eventData={eventData}
-            setEventData={setEventData}
-            setUpdating={setUpdating}
-            setMarkerData={setMarkerData}
-          />
-        )}
+      <div className="whole-right-section">
+        <div className="right-section">
+          {!updating && <MarkerCreator setMarkerData={setMarkerData} />}
+          {updating && (
+            <MarkerUpdator
+              eventData={eventData}
+              setEventData={setEventData}
+              setUpdating={setUpdating}
+              setMarkerData={setMarkerData}
+            />
+          )}
+          <RsvpDisplay />
+        </div>
+
         {/* If eventData and user are not null, display the event data */}
+        {/* TODO: Ensure this will work for both ticketmaster and user created events once backends changes have been merged into dev  */}
         {eventData && user && (
           <div className="info-container box-shadow-1">
             <h2 className="event-title">{eventData.name}</h2>
             <p className="event-description"> {eventData.description}</p>
             <ul className="info-list">
               <li className="info-list-item">
-                Organizer: {eventData.organizer}
+                Organizer: {eventData.organizer.username}
               </li>
               <li className="info-list-item">Location: {eventData.address}</li>
               <li className="info-list-item">
                 Date: {new Date(eventData.date).toLocaleString()}
               </li>
-              <li className="info-list-item">RSVP: {eventData.email}</li>
+              {/* <li className="info-list-item">RSVP: {eventData.organizer.email}</li> */}
+              <li>
+                {" "}
+                RSVP:
+                <div className="rsvp-button-div">
+                  <button className="rsvp-button" onClick={sendRSVP} value={1}>
+                    Not Going
+                  </button>
+                  <button className="rsvp-button" onClick={sendRSVP} value={2}>
+                    Maybe Going
+                  </button>
+                  <button className="rsvp-button" onClick={sendRSVP} value={3}>
+                    Likely Going
+                  </button>
+                  <button className="rsvp-button" onClick={sendRSVP} value={4}>
+                    {" "}
+                    Definitely Going
+                  </button>
+                </div>
+              </li>
             </ul>
             {/* If the user is the creator of the event, display the edit and delete buttons */}
-            {eventData.email === user.email && (
+            {eventData.organizer.email === user.email && (
               <div className="event-buttons-container">
                 <button
                   className="edit-button "

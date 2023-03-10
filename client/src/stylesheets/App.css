@@ -16,6 +16,15 @@ button, input {
 button {
   cursor: pointer;
 }
+.rsvp-button {
+  width: 150px;
+  height: 30px;
+}
+
+.event-buttons-container {
+  margin-top: 5px;
+}
+
 .edit-button, .delete-button {
   width: 100px;
   height: 30px;
@@ -27,7 +36,7 @@ button {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
 }
 
 * {
@@ -40,20 +49,32 @@ button {
   padding:0;
 }
 
+.create-event-and-rsvp{
+  display:flex;
+  flex-direction:row;
+}
+
+.rsvp-button-div{
+  margin-top: 30px;
+}
+
 .info-container {
   /* outline: 2px solid black; */
   display: flex;
   flex-direction: column;
+  justify-content:space-between;
   align-items: center;
   height: min-content;
   text-align: center;
   padding: 20px;
-  min-width: 300px;
+  min-width: 600px;
+  min-height: 220px;
   margin-top: 20px;
   color:white;
   /* background-color: rgba(255, 255, 255, 0.10); */
+  background: rgba(237, 71, 74, 0.8);
   /* background: linear-gradient(to right, #fb5283, #ff3527) */
-  background: linear-gradient(rgba(27, 27, 49, 0.5), rgba(242, 109, 249, 0.5), rgba(230, 249, 175, 0.5), rgba(117, 185, 190, 0.5), rgba(237, 71, 74, 0.5));
+  /* background: linear-gradient(rgba(237, 71, 74, 0.5)); */
 }
 .event-title {
   margin-top: -4px;
@@ -87,6 +108,7 @@ button {
   border-radius: 5px;
   width: 300px;
   color:white;
+  margin-right: 25px;
 
 }
 
@@ -224,8 +246,8 @@ a:hover {
   left: 50%;
   transform: translateX(-50%);
   padding: 10px;
-  background-color:#8836F4;
-  color:white;
+  background-color:white;
+  color:black;
 }
 
 button {
@@ -247,4 +269,16 @@ button:hover {
 #event-date{
   color:white;
   color-scheme: dark;
+}
+
+.right-section{
+  display:flex;
+  flex-direction:row;
+  /* flex-wrap:wrap; */
+  /* background-color:green; */
+}
+
+.whole-right-section {
+  display:flex;
+  flex-direction:column;
 }
