@@ -93,4 +93,27 @@ attendeeController.addAttendee = (req, res, next) => {
     }));
 };
 
+// on the frontend is where we would verify that an event already exists in the events table in the db
+  // we would check that the event object exists in the array of events that the user is rsvp-ed to before calling this endpoint to UPDATE vs CREATE
+attendeeController.updateAttendee = (req, res, next) => {
+  const user_id = req.body.organizer.id;
+  const new_rsvp_level = Number(req.params.new_rsvp_level);
+  const event_id = req.body.id;
+
+  const queryStr = 'UPDATE attendees SET rsvp_level_id = $1 WHERE users_id = $2 AND events_id = $3 RETURNING *';
+  const args = [new_rsvp_level, user_id, event_id];
+  db.query(queryStr, args)
+    .then((data) => {
+      console.log('data: ', data);
+      const updatedAttendee = data.rows[0];
+      res.locals.updatedAttendee = updatedAttendee;
+      console.log('updatedAttendee: ', updatedAttendee);
+      return next();
+    })
+    .catch((error) => next({
+      log: 'Error in attendeeController.updateAttendee',
+      message: { err: error },
+    }));
+};
+
 module.exports = attendeeController;

@@ -67,13 +67,20 @@ router.get(
 
 // RSVP to an event - create an event if necessary, then add the user to attendees table and return the new row on the response object
 router.post(
-  '/rsvp/:rsvp_level',
+  '/rsvp/:rsvp_level', // POST request to /api/rsvp/<rsvpID>
   eventController.findEvent,
   eventController.createEvent,
   attendeeController.addAttendee,
   (req, res) => {
     return res.status(200).json(res.locals.newAttendee);
   },
+);
+
+// update RSVP
+router.put(
+  '/rsvp/:new_rsvp_level',
+  attendeeController.updateAttendee,
+  (req, res) => res.status(200).json(res.locals.updatedAttendee),
 );
 
 // Checks for active sessions
