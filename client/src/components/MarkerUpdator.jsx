@@ -34,11 +34,11 @@ export default function MarkerUpdator(props) {
   }
 
   // submit handler
-  const handleSubmit = async (e) => {
+  const eventUpdate = async (e) => {
     e.preventDefault();
     try {
       console.log('in MARKER CREATOR user is: ', user.id);
-      const { id, email, name: username } = user;
+      const { id, email, picture, name: username } = user;
       // event object for the database
       const event = {
         name,
@@ -46,23 +46,32 @@ export default function MarkerUpdator(props) {
         locName,
         date,
         description,
-        userID: id,
-        eventID: props.eventData.id
+        endDate: null,  // TODO: Figure out how we'll fill out this portion
+        image_url: null, // TODO: Ticket master, Figure out how we'll fill out this portion later
+        organizer: {
+          id,
+          username,
+          email,
+          picture
+        },
+        ticketmaster_evt_id: null,
+        rsvp_url: null,
+        evt_origin_type_id: 1, // user created = 1, ticketmaster = 2
+        id: props.eventData.id
       };
+      // console.log('eventID: ', props.eventData.id);
       // encode the address and geocode it
       const encoded = address.replaceAll(' ', '+');
       const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encoded}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
       const response = await axios.get(url);
       const data = response.data.results[0];
-      event.location = [{
+      event.location = {
         lat: data.geometry.location.lat,
         lng: data.geometry.location.lng,
-      }];
+      };
       // send the update request to the database
       const eventID = await axios.put('/api/events', event);
       event.eventID = eventID.data;
-      event.email = email;
-      event.organizer = username;
       // replace the MarkerData in state with the updated array
       props.setMarkerData(prevMarkerData => {
         // remove the edited event
@@ -73,6 +82,7 @@ export default function MarkerUpdator(props) {
         // spread in the filtered old events with the new event added in
         return [...updatedMarkers, event];
       });
+      // console.log('MarkerUpdator: updatedMarkers: ', updatedMarkers);
       // update window closes and is replaced with add event
       props.setUpdating(false);
       //console.log('most recent marker is: ', markerData[markerData.length - 1]);
@@ -98,7 +108,7 @@ export default function MarkerUpdator(props) {
   return (
     <div className="create-event-container box-shadow-1">
       <h4>Edit your Event</h4>
-      <form id="add-event" className="create-form" onSubmit={handleSubmit}>
+      <form id="add-event" className="create-form" onSubmit={eventUpdate}>
         <label className="screen-reader-text" htmlFor="event-name">
           Name your event:
         </label>
@@ -133,3 +143,5 @@ export default function MarkerUpdator(props) {
     </div>
   );
 }
+
+

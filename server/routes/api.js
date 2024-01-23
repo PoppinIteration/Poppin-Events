@@ -2,6 +2,9 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const eventController = require('../controllers/eventController');
 const sessionController = require('../controllers/sessionController');
+const tmEventController = require('../controllers/tmEventController');
+const geocodeController = require('../controllers/geoCodeController');
+const attendeeController = require('../controllers/attendeeController');
 
 const router = express.Router();
 
@@ -45,6 +48,32 @@ router.delete(
   '/events',
   eventController.deleteEvent,
   (req, res) => res.sendStatus(200),
+);
+
+// GET all the events in a specific area from Ticketmaster API
+router.get(
+  '/ticketmaster/:lat/:lng',
+  geocodeController.reverseGeocode,
+  tmEventController.getEvents,
+  (req, res) => res.status(200).json(res.locals.events),
+);
+
+// GET all rsvp events for a user
+router.get(
+  '/rsvp', // GET request to /api/rsvp?userID=<userID>
+  attendeeController.getEventsByUser,
+  (req, res) => res.status(200).json(res.locals.rsvpEvents),
+);
+
+// RSVP to an event - create an event if necessary, then add the user to attendees table and return the new row on the response object
+router.post(
+  '/rsvp/:rsvp_level',
+  eventController.findEvent,
+  eventController.createEvent,
+  attendeeController.addAttendee,
+  (req, res) => {
+    return res.status(200).json(res.locals.newAttendee);
+  },
 );
 
 // Checks for active sessions

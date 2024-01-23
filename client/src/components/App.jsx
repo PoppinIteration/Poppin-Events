@@ -1,24 +1,32 @@
-import '../stylesheets/App.css';
+//  fetch requester
 import axios from 'axios';
-import Map from './Map';
 import React, { useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
+//  import routes and usenavigate
+import { Routes, Route, useNavigate } from 'react-router-dom';
+
+//import map and login components
+import Map from './Map';
 import Login from './Login';
 import { UserContext } from './UserContext';
-import {Routes, Route, useNavigate} from 'react-router-dom';
 
+//  stylings
+import '../stylesheets/App.css';
 
 function App(props) {
   const navigate = useNavigate();
+  // initialize null user to state
   const [user, setUser] = useState(null);
   console.log('in APP, user is: ', user);
 
   useEffect(() => {
+    // on change, if user === null, check session
     console.log('in useEffect, and user is: ', user);
     const checkSession = async () => {
       try {
+        // attempt to grab user info
         const userInfo = await axios.get('/api/sessions');
         console.log('user info is: ', userInfo);
+        // if they are loggedIn, update state with user info and redirect to map
         if (userInfo.data.loggedIn === true) {
           setUser({
             name: userInfo.data.name,
@@ -29,6 +37,7 @@ function App(props) {
           });
           navigate('/map');
         }
+        // else go back to log in
         else navigate('login');
       } catch (e) {
         console.log('Error in checkSession: ', e.message);
@@ -39,6 +48,7 @@ function App(props) {
       checkSession();
     }
     else {
+      // if user is not null go to map
       console.log('user is not null');
       navigate('/map');
     }
@@ -47,8 +57,10 @@ function App(props) {
   const logout = async () => {
     // make server request to logout / destroy session + cookie
     try {
+      // delete session
       const response = await axios.delete('/api/sessions');
       console.log('successful logout');
+      // reset user
       setUser(null);
     } catch (e) {
       console.log('error logging out: ', e.message);
@@ -71,6 +83,7 @@ function App(props) {
         }
       </nav>
       
+      {/* look into usercontext provider */}
       <UserContext.Provider value={{user}}>
         <Routes>
           <Route

@@ -21,21 +21,30 @@ Some important considerations - things you'll have to create and set up for your
 2 - SQL server URI (make a .env file in the server directory with PG_URI='<your SQL db uri>')
 
 SQL server Schema: 
-    ![pg_schema](/docs/schema.jpg)
+    ![pg_schema](/docs/schema.png)
 
-Must swap in your own via .evs:
+Must swap in your own via .envs:
 
-    server/.env => swap out PG_URI (call with "process.env.PG_URI")
+    The following will be accessed using "process.env.<env Variable Name>":
+    server/.env => add in a PG_URI
+        - Links to a SQL database
+    server/.env => add in TICKETMASTER_API_KEY 
+        - Links to the Ticketmaster api
+    server/.env => add in VITE_GOOGLE_MAPS_API_KEY
+        - Links to the Google geocoding api for reverse geocoding
 
-    client/.env => swap out GOOGLE_API_KEY (call with "import.meta.env.VITE_GOOGLE_OATH_CLIENT_ID")
+    The following will be imported using "import.meta.env.<env Variable Name>":
+    client/.env => swap out VITE_GOOGLE_MAPS_API_KEY
+        - Links to Google Maps api
+    client/.env => swap out VITE_GOOGLE_OATH_CLIENT_ID
+        - Links to Google oAuth 2.0 Login
 
-    client/.env => swap out GOOGLE_OATH_CLIENT_ID (call with "import.meta.env.VITE_GOOGLE_OATH_CLIENT_ID")
+Event data has now been standardized to be sent and received from both frontend and backend in the following format: 
+![event_data_format](/docs/eventDataFormat.png)
 
 Unimplemented features with frameworks:
 
 1 - display pictures next to the organizer's name in the event display: Currently, we get, store, and update user picture urls, but they are unused
-
-2 - have an RSVP button in event display instead of organizer email that creates a new entry on the attendees table in the SQL database, linking the user to the respective event. We have a schema for using Attendees as an association table, but it is unused currently. Maybe also add an attendee list to the event info panel from there.
 
 Possible Refactors:
 
