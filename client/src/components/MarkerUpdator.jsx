@@ -72,7 +72,6 @@ export default function MarkerUpdator(props) {
       // send the update request to the database
       const eventID = await axios.put('/api/events', event);
       event.eventID = eventID.data;
-      // console.log('WHY THE FUCK ARE WE DOING THIS: ', event.eventID);
       // replace the MarkerData in state with the updated array
       props.setMarkerData(prevMarkerData => {
         // remove the edited event
