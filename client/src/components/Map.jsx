@@ -113,7 +113,6 @@ function Map() {
     };
     // send object to the server to delete the event
     const response = await axios.delete("/api/events/", {
-      // yeah, not restful, oh well sowee >.<
       data: { deleteReq },
     });
     // filter the removed event from the marker data array
@@ -136,7 +135,6 @@ function Map() {
   // <GoogleMap><GoogleMap /> component imported from @react-google-maps/api used to render google maps
   // https://react-google-maps-api-docs.netlify.app/#googlemap
 
-  // yes ... we know that this could be refactored into multiple components but .... time
   return (
     <div className="map-section">
       <GoogleMap
