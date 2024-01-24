@@ -1,7 +1,7 @@
 # Poppin-Events
 Poppin-Events is an application that allows users to view events in their area (user created or Ticketmaster’s public events), RSVP to events, create new events, edit or delete user's own events, and view RSVP’d events of other users within the network.
 
-### Prerequisites
+## Prerequisites
 This guide assumes you have done the following:
 * Install Node 18.
 * Install PostgreSQL.
@@ -10,8 +10,8 @@ This guide assumes you have done the following:
 PG_URI=<your_SQL_db_uri>
 ```
 * Setup Google API keys for OAuth 2.0 and Maps (reverse geocoding).
-  * Sign up with Google Cloud Platform to create your own application to obtain the client ID and secret for OAuth for API key for Maps.
-  * Add client ID, secret and key in an .env file in the client directory.
+  * Sign up with Google Cloud Platform to create your own application to obtain the client ID and secret for OAuth and API key for Maps.
+  * Add client ID, secret and key in a .env file in the client directory.
    * Add the Maps API key to a .env file in the server directory.
 ```sh 
 VITE_GOOGLE_OATH_CLIENT_ID
@@ -26,7 +26,7 @@ VITE_GOOGLE_MAPS_API_KEY
 TICKETMASTER_API_KEY
 ```
 
-##### .env File Setup
+#### .env File Setup
 
 The recommended `.env` client and server files setup is below. 
 
@@ -48,41 +48,47 @@ VITE_GOOGLE_OATH_CLIENT_SECRET=<your_google_oath_secret>
 VITE_GOOGLE_MAPS_API_KEY=<your_google_maps_key>
 ```
 
-### Installation
+## Installation
 Build the application in the root directory. The client and server need to also be built separately. 
+
+1. Install root directory dependencies.
 ```sh
 npm install
 ```
 Build the client.
-1. From the root of the repository, change to `client` directory.
+
+2. From the root of the repository, change to `client` directory.
 ```sh
 cd client
 ```
 
-1. Install client dependencies.
+3. Install client dependencies.
 ```sh
 npm install
 ```
 
 Build the server.
-1. From the root of the repository, change to `server` directory.
+
+4. From the root of the repository, change to `server` directory.
 ```sh
 cd server
 ```
 
-1. Install server dependencies.
+5. Install server dependencies.
 ```sh
 npm install
 ```
 
-Run application in the root directory to concurrently run the the client (3000). 
+Deploy the application.
 
-*Note*: If your server is running on 3001, it will not run. Shut down port 3001 and `killall node` before starting again.
+6. Run application in the root directory to concurrently run the the client (3000). 
+
+  *Note*: If your server is running on 3001, it will not run. Shut down port 3001 and `killall node` before starting again.
 ```sh
 npm start
 ```
 
-### Data & System Design
+## Data & System Design
 
 **Database Schema**: 
 ![pg_schema](/docs/schema.png)
