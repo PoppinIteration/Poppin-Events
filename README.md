@@ -1,57 +1,94 @@
 # Poppin-Events
-An app that allows users to view events in their area, create new events, and edit/delete their own events from the map
+Poppin-Events is an application that allows users to view events in their area (user created or Ticketmaster’s public events), RSVP to events, create new events, edit or delete user's own events, and view RSVP’d events of other users within the network.
 
-# To future archaeologists: 
-We used Vite! Enjoy (here is the starter video for structure: https://www.youtube.com/watch?v=PPjpHaLkV7A)
+### Prerequisites
+This guide assumes you have done the following:
+* Install Node 18.
+* Install PostgreSQL.
+  * Add PostgreSQL server URI to a .env file in the server directory.
+```sh
+PG_URI=<your_SQL_db_uri>
+```
+* Setup Google API keys for OAuth 2.0 and Maps (reverse geocoding).
+  * Sign up with Google Cloud Platform to create your own application to obtain the client ID and secret for OAuth for API key for Maps.
+  * Add client ID, secret and key in an .env file in the client directory.
+   * Add the Maps API key to a .env file in the server directory.
+```sh 
+VITE_GOOGLE_OATH_CLIENT_ID
+VITE_GOOGLE_OATH_CLIENT_SECRET
+VITE_GOOGLE_MAPS_API_KEY
+```
+  
 
-Note: You'll have to npm i for the root directory, the client, and the server separately
+* Setup Ticketmaster API key.
+  * Add the Ticketmaster API key into the .env file in the server directory.
+```sh
+TICKETMASTER_API_KEY
+```
 
-Run 'npm start' in root directory to concurrently run server(5000) and client(3000)
+##### .env File Setup
 
-Npm install your frontend dependencies in client folder, backend dependencies in server folder
+The recommended `.env` client and server files setup is below. 
 
-If your server is running on 3001, it won't work, so shut it down and killall node before starting again
+**server/.env**
 
-Some important considerations - things you'll have to create and set up for yourself:
+The listed variables will be accessed using `process.env.<env_Variable_Name>`:
+```sh
+PG_URI=<your_pg_uri>
+VITE_GOOGLE_MAPS_API_KEY=<your_google_maps_key>
+TICKETMASTER_API_KEY=<your_ticketmaster_key>
+```
 
-1 - GoogleAPI key for OAuth and Maps (make a .env file in the client directory with key value pairs that correspond with constants that are imported like import.meta.env.VITE_GOOGLE_OATH_CLIENT_ID or import.meta.env.VITE_GOOGLE_OATH_CLIENT_ID)
+**client/.env**
 
-    - You will need to sign up via Google Cloud Platform to create your own application to get your own Client ID and Secret for Oauth, and same thing for Google Maps
-    
-2 - SQL server URI (make a .env file in the server directory with PG_URI='<your SQL db uri>')
+The following will be accessed using `import.meta.env.<env_Variable_Name>`:
+```sh
+VITE_GOOGLE_OATH_CLIENT_ID=<your_google_oath_id>
+VITE_GOOGLE_OATH_CLIENT_SECRET=<your_google_oath_secret>
+VITE_GOOGLE_MAPS_API_KEY=<your_google_maps_key>
+```
 
-SQL server Schema: 
-    ![pg_schema](/docs/schema.png)
+### Installation
+Build the application in the root directory. The client and server need to also be built separately. 
+```sh
+npm install
+```
+Build the client.
+1. From the root of the repository, change to `client` directory.
+```sh
+cd client
+```
 
-Must swap in your own via .envs:
+1. Install client dependencies.
+```sh
+npm install
+```
 
-    The following will be accessed using "process.env.<env Variable Name>":
-    server/.env => add in a PG_URI
-        - Links to a SQL database
-    server/.env => add in TICKETMASTER_API_KEY 
-        - Links to the Ticketmaster api
-    server/.env => add in VITE_GOOGLE_MAPS_API_KEY
-        - Links to the Google geocoding api for reverse geocoding
+Build the server.
+1. From the root of the repository, change to `server` directory.
+```sh
+cd server
+```
 
-    The following will be imported using "import.meta.env.<env Variable Name>":
-    client/.env => swap out VITE_GOOGLE_MAPS_API_KEY
-        - Links to Google Maps api
-    client/.env => swap out VITE_GOOGLE_OATH_CLIENT_ID
-        - Links to Google oAuth 2.0 Login
+1. Install server dependencies.
+```sh
+npm install
+```
 
-Event data has now been standardized to be sent and received from both frontend and backend in the following format: 
+Run application in the root directory to concurrently run the the client (3000). 
+
+*Note*: If your server is running on 3001, it will not run. Shut down port 3001 and `killall node` before starting again.
+```sh
+npm start
+```
+
+### Data & System Design
+
+**Database Schema**: 
+![pg_schema](/docs/schema.png)
+
+**Standardized Event Data Format (frontend & backend)**:
 ![event_data_format](/docs/eventDataFormat.png)
 
-Unimplemented features with frameworks:
-
-1 - display pictures next to the organizer's name in the event display: Currently, we get, store, and update user picture urls, but they are unused
-
-Possible Refactors:
-
-1 - Possibly display event boxes on map if you want, instead of to the side
-
-2 - Refactor use of .id for both events and users to be userID / eventID on the front-end
-
-Bugs to squash:
-
-1 - Newly created events don't have their time populate correctly on edit without a full page reload - likely, the date isn't being saved in state in a way the datetime-local input wants to receive
+**Production Design Document**:
+![production_design](/link_to_be_added)
