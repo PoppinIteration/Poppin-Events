@@ -91,10 +91,13 @@ npm start
 ## Data & System Design
 
 **Database Schema**: 
+
 ![pg_schema](/docs/schema.png)
 
 **Standardized Event Data Format (frontend & backend)**:
+
 ![event_data_format](/docs/eventDataFormat.png)
 
 **Production Design Document**:
+
 ![production_design](/link_to_be_added)
